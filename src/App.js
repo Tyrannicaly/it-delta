@@ -1,25 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect} from 'react';
+import { Photos } from './components/Photos'
+import styled from 'styled-components';
+import {api} from './API/api'
 
-function App() {
+
+const Container = styled.div`
+display: flex;
+flex-direction: column;
+  align-items: center;
+`
+
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+      api.getAllImgs()
+      .then(setPosts)
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      {
+        posts.map(elem=> <Photos  key={elem.id} {...elem}  />)
+      }
+    </Container>
+
   );
-}
+};
 
 export default App;
